@@ -16,6 +16,12 @@ namespace ConsoleStudy
             {
                 // m_surviveday++; 아래와 같음
                 m_surviveday = (m_surviveday + 1);
+                
+                if(m_surviveday > 130)
+                {
+                    Console.Write("탈진!!!");
+                    return;
+                }
             }
         }
 
