@@ -28,7 +28,19 @@ namespace ConsoleStudy
         static void Main(string[] args)
         {
             Vacation vacation = new Vacation();
-            vacation.AliveDay();
+
+            for(int i = 0; i < 150; i++)
+            {
+                if (vacation.m_surviveday > 130)
+                {
+                    Console.WriteLine("탈진");
+                    break;
+                }
+
+                vacation.AliveDay();
+            }
+
+            Console.WriteLine(vacation.m_surviveday);
         }
     }
 }
