@@ -19,8 +19,18 @@ namespace StudyCsharp
             { 
             }*/
 
-            public void InitRPGPlayer(string name, int Atk, int Hp)
+            public void InitRPGPlayer(string name, int atk, int hp)
             {
+                Name = name;
+                Atk = atk;
+                Hp = hp;
+            }
+            public void AttackMonster(RPGMonster targetMonster)
+            {
+                //public Setter 니깐 우선 깎아 본다?
+                targetMonster.Hp -= this.Atk;
+                Console.WriteLine($"{this.Name}이 {targetMonster.GetName()}을 " +
+                    $"{this.Atk}만큼 공격해서 {targetMonster.Hp}만큼 남았다");
 
             }
         }
@@ -37,9 +47,9 @@ namespace StudyCsharp
                 get { return m_atk; }
                 set
                 {
-                    if (m_atk != value) 
-                    { 
-                        m_atk = value; 
+                    if (m_atk != value)
+                    {
+                        m_atk = value;
                     }
                 }
             }
@@ -60,6 +70,11 @@ namespace StudyCsharp
                 Atk = atk;
                 Hp = Hp;
             }
+
+            public void AttackPlayer()
+            {
+
+            }
         }
         static void Main(string[] args)
         {
@@ -74,6 +89,8 @@ namespace StudyCsharp
 
             var monster223 = new RPGMonster();
             monster333.InitRPGMonster("프로그", 10, 30);
+
+            player.AttackMonster(monster223);
         }
     }
 }
