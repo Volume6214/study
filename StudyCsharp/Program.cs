@@ -12,6 +12,17 @@ namespace StudyCsharp
         {
 
             public string Name { get; set; }
+            public int Atk { get; set; }
+            public int Hp { get; set; }
+
+            /*public RPGPlayer(string name, int Atk, int Hp)
+            { 
+            }*/
+
+            public void InitRPGPlayer(string name, int Atk, int Hp)
+            {
+
+            }
         }
 
         public class RPGMonster
@@ -42,10 +53,27 @@ namespace StudyCsharp
             {
                 m_name = name;
             }
+
+            public void InitRPGMonster(string name, int atk, int Hp)
+            {
+                SetNAme(name); // m_name = name; 도 가능
+                Atk = atk;
+                Hp = Hp;
+            }
         }
         static void Main(string[] args)
         {
+            var player = new RPGPlayer();
+            player.InitRPGPlayer("홍길동", 100, 200);
 
+            var monster333 = new RPGMonster();
+            monster333.InitRPGMonster("슬라임", 1000, 10);
+
+            var monster443 = new RPGMonster();
+            monster333.InitRPGMonster("드래곤", 200, 100);
+
+            var monster223 = new RPGMonster();
+            monster333.InitRPGMonster("프로그", 10, 30);
         }
     }
 }
