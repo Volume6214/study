@@ -1,7 +1,21 @@
-﻿using System;
+﻿using StudyCsharp;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace StudyCsharp
 {
+    public class Ride //(3)
+    {
+        public string Name { get; set; }
+
+        public Action<string> OnBuffRide; //(4) 버프선언
+
+        public void BuffRide(string rideName) // (4)
+        {
+            OnBuffRide?.Invoke("이동속도 버프"); //(4)
+        }
+    }
+
     public class RPGPlayer
     {
         public string Name { get; private set; }
@@ -9,6 +23,8 @@ namespace StudyCsharp
         public int Hp { get; private set; }
 
         public Action<int> OnAttack; // (1) 이벤트 선언
+
+
 
         public void InitRPGPlayer(string name, int atk, int hp)
         {
@@ -32,6 +48,15 @@ namespace StudyCsharp
         {
             this.Hp -= monsterAtk;
             Console.WriteLine($"{this.Name}이 {monsterAtk}만큼 피해를 입어 {this.Hp}가 남았다");
+        }
+
+        public void Riding(string rideName) //(3)
+        {
+            Console.WriteLine($"{rideName}를 탔습니다.");
+        }
+        public void OnBuffAdded(string buffName)
+        {
+            Console.WriteLine($"탑승을한 탈것이 {buffName}를 걸어줬다");
         }
     }
 
@@ -81,17 +106,27 @@ namespace StudyCsharp
             var monster227 = new RPGMonster();
             monster227.InitRPGMonster("임프", 10, 30);
 
+            //임프의 선공 전에 이벤트 할당
             monster227.OnAttack += player.TakeDamage; //(2) 몬스터도 이벤트로 공격
 
             // 임프의 선공
             monster227.AttackPlayer();
 
             player.OnAttack += monster227.TakeDamage; //(1) 플레이어의 공격에 몬스터가 받도록 한다?
-            // 위 코드는 공격한 것이 아닌 상황부여
+                                                      // 위 코드는 공격한 것이 아닌 상황부여
 
             // 임프 한번 공격해볼게요
             player.AttackMonster(); //플레이어가 공격한다. 따라서 위 조건을 실행하여 데미지를 받는다.
 
+
+            var roc334 = new Ride(); //(3) 탈것 정의생성
+            roc334.Name = "비상식량";
+
+            roc334.OnBuffRide += player.OnBuffAdded;  // 버프 연결? 정의
+
+            player.Riding(roc334.Name); //(3) 탈것 탑승
+
+            roc334.BuffRide(roc334.Name); // (4) 버프 발동
 
         }
     }
