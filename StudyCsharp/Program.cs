@@ -8,7 +8,7 @@ namespace StudyCsharp
         public int Atk { get; private set; }
         public int Hp { get; private set; }
 
-        public Action<int> OnAttack; // (1) 이벤트 서언
+        public Action<int> OnAttack; // (1) 이벤트 선언
 
         public void InitRPGPlayer(string name, int atk, int hp)
         {
@@ -17,7 +17,7 @@ namespace StudyCsharp
             Hp = hp;
         }
 
-        public void AttackMonster()
+        public void AttackMonster() // (1) 파라미터 제거
         {
             Console.WriteLine($"{this.Name}이 공격을 시도했다"); // (1)
 
@@ -28,10 +28,10 @@ namespace StudyCsharp
                 $" {this.Atk}만큼 공격해서 {targetMonster.Hp}만큼 남았다");*/
         }
 
-        public void TakeDamage(int targetMonsterAtk)
+        public void TakeDamage(int monsterAtk) // (1)
         {
-            this.Hp -= targetMonsterAtk;
-            Console.WriteLine($"{this.Name}이 {targetMonsterAtk}의 공격을 받아 {this.Hp}가 남았다");
+            this.Hp -= monsterAtk;
+            Console.WriteLine($"{this.Name}이 {monsterAtk}만큼 피해를 입어 {this.Hp}가 남았다");
         }
     }
 
@@ -40,6 +40,8 @@ namespace StudyCsharp
         public string Name { get; set; }
         public int Atk { get; set; }
         public int Hp { get; set; }
+
+        public Action<int> OnAttack; //(2) 이벤트 발생? 정의 꼭 해야함 다 해놓고 여기서 해맴
 
         public void InitRPGMonster(string name, int atk, int hp)
         {
@@ -54,11 +56,15 @@ namespace StudyCsharp
             Console.WriteLine($"{this.Name}이 {playerAtk}만큼 피해를 입어 {this.Hp}가 남았다");
         }
 
-        public void AttackPlayer(RPGPlayer targetPlayer)
+        public void AttackPlayer() // (2)
         {
-            Console.WriteLine($"{this.Name}이 {targetPlayer.Name}을" +
+            Console.WriteLine($"{this.Name}이 공격을 시도했다"); // (1)
+
+            OnAttack?.Invoke(this.Atk);
+
+            /*Console.WriteLine($"{this.Name}이 {targetPlayer.Name}을" +
               $" {this.Atk}만큼 공격했다");
-            targetPlayer.TakeDamage(this.Atk);
+            targetPlayer.TakeDamage(this.Atk);*/
         }
 
         static void Main(string[] args)
@@ -75,8 +81,10 @@ namespace StudyCsharp
             var monster227 = new RPGMonster();
             monster227.InitRPGMonster("임프", 10, 30);
 
+            monster227.OnAttack += player.TakeDamage; //(2) 몬스터도 이벤트로 공격
+
             // 임프의 선공
-            monster227.AttackPlayer(player);
+            monster227.AttackPlayer();
 
             player.OnAttack += monster227.TakeDamage; //(1) 플레이어의 공격에 몬스터가 받도록 한다?
             // 위 코드는 공격한 것이 아닌 상황부여
