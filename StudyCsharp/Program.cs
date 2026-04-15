@@ -6,29 +6,32 @@ namespace StudyCsharp
     {
         public string Name;
 
-        public Action<string, bool> OnReact;
-        // 그냥 bool없이하니깐 TakeAction끼리 반응해서 TakeAction이 무한 반복된다.
-
+        // 1. 행동했을 때 알리는 이벤트
+        public Action<string> OnActionCompleted;
+        // 2. 반응했을 때 알리는 이벤트
+        public Action<string> OnReactionCompleted;
 
         public void DoAction(string actionName)
         {
             Console.WriteLine($"{Name}이(가) {actionName}을 했다.");
 
-            OnReact?.Invoke(actionName, true);
+            OnActionCompleted?.Invoke(actionName);
         }
 
-        public void TakeAction(string actionName, bool isFromDoAction)
+        // 상대방의 '행동'을 받았을 때 실행됨
+        public void TakeAction(string actionName)
         {
-            Console.WriteLine($"{Name}이(가) {actionName}을 받았다.");
+            Console.WriteLine($"{Name}이(가) {actionName}의 맞반응!");
 
-            if (isFromDoAction == false) 
-            {
-                return;
-            } // 여기서 진짜 애먹음 TakeAction이면 false라는 생각으로 do가 아닌 take로 했었음
+            // 맞대응 했음을 알림
+            OnReactionCompleted?.Invoke(actionName);
+        }
 
-            Console.WriteLine($"{Name}이(가) {actionName}로 맞대응!");
-
-            OnReact?.Invoke(actionName, false);
+        // 상대방의 '반응'을 받았을 때 실행됨
+        public void TakeReaction(string actionName)
+        {
+            // 리액션에 대한 처리 하지 않고 여기서 흐름을 끝냅니다.
+            Console.WriteLine($"{Name}이(가) 상대방의 반응을 보았다 끝!");
         }
     }
 
@@ -42,15 +45,13 @@ namespace StudyCsharp
             Player player02 = new Player();
             player02.Name = "플레이어2";
 
-            // 양방향 연결
-            player01.OnReact += player02.TakeAction;
-            player02.OnReact += player01.TakeAction;
+            player01.OnActionCompleted += player02.TakeAction;
+            player02.OnReactionCompleted += player01.TakeReaction;
+
+            player02.OnActionCompleted += player01.TakeAction;
+            player01.OnReactionCompleted += player02.TakeReaction;
 
             player01.DoAction("하이파이브");
-
-            Console.WriteLine("------");
-
-            player02.DoAction("손인사");
         }
     }
 }
